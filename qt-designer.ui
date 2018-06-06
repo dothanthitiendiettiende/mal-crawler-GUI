@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>838</width>
+    <height>794</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="TabWidget1">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab1">
+      <attribute name="title">
+       <string>Mal-Crawler</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="leftMargin">
+          <number>30</number>
+         </property>
+         <property name="topMargin">
+          <number>30</number>
+         </property>
+         <property name="rightMargin">
+          <number>30</number>
+         </property>
+         <property name="bottomMargin">
+          <number>30</number>
+         </property>
+         <property name="spacing">
+          <number>30</number>
+         </property>
+         <item row="0" column="3">
+          <widget class="QPushButton" name="pushButton_4">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>dasmalwerk</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QSpinBox" name="spinBox_3">
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QSpinBox" name="spinBox_4">
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QSpinBox" name="spinBox_2">
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="pushButton_3">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>vxvault</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>malshare</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QPushButton" name="pushButton">
+           <property name="baseSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>malc0de</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="spinBox">
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Sample Database</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="tab_1">
+          <attribute name="title">
+           <string>malc0de</string>
+          </attribute>
+          <widget class="QTableWidget" name="tableWidget">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>761</width>
+             <height>211</height>
+            </rect>
+           </property>
+           <row>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>Timestamp</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>URL</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>MD5</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Virustotal</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Yara Match</string>
+            </property>
+           </column>
+           <item row="0" column="0">
+            <property name="text">
+             <string>2018-01-01</string>
+            </property>
+           </item>
+           <item row="0" column="1">
+            <property name="text">
+             <string>http://www.naver.com</string>
+            </property>
+           </item>
+           <item row="0" column="2">
+            <property name="text">
+             <string>7D569C9600C67A457EF4FA8094F16BCD</string>
+            </property>
+           </item>
+           <item row="0" column="3">
+            <property name="text">
+             <string>11/63</string>
+            </property>
+           </item>
+           <item row="0" column="4">
+            <property name="text">
+             <string>aasd asdwqe qweqwe</string>
+            </property>
+           </item>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_2">
+          <attribute name="title">
+           <string>malshare</string>
+          </attribute>
+          <widget class="QTableWidget" name="tableWidget_2">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>761</width>
+             <height>211</height>
+            </rect>
+           </property>
+           <row>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>Timestamp</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>URL</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>MD5</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Virustotal</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Yara Match</string>
+            </property>
+           </column>
+           <item row="0" column="0">
+            <property name="text">
+             <string>2018-01-01</string>
+            </property>
+           </item>
+           <item row="0" column="1">
+            <property name="text">
+             <string>http://www.naver.com</string>
+            </property>
+           </item>
+           <item row="0" column="2">
+            <property name="text">
+             <string>7D569C9600C67A457EF4FA8094F16BCD</string>
+            </property>
+           </item>
+           <item row="0" column="3">
+            <property name="text">
+             <string>11/63</string>
+            </property>
+           </item>
+           <item row="0" column="4">
+            <property name="text">
+             <string>aasd asdwqe qweqwe</string>
+            </property>
+           </item>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title">
+           <string>vxvault</string>
+          </attribute>
+          <widget class="QTableWidget" name="tableWidget_3">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>761</width>
+             <height>211</height>
+            </rect>
+           </property>
+           <row>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>Timestamp</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>URL</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>MD5</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Virustotal</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Yara Match</string>
+            </property>
+           </column>
+           <item row="0" column="0">
+            <property name="text">
+             <string>2018-01-01</string>
+            </property>
+           </item>
+           <item row="0" column="1">
+            <property name="text">
+             <string>http://www.naver.com</string>
+            </property>
+           </item>
+           <item row="0" column="2">
+            <property name="text">
+             <string>7D569C9600C67A457EF4FA8094F16BCD</string>
+            </property>
+           </item>
+           <item row="0" column="3">
+            <property name="text">
+             <string>11/63</string>
+            </property>
+           </item>
+           <item row="0" column="4">
+            <property name="text">
+             <string>aasd asdwqe qweqwe</string>
+            </property>
+           </item>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_4">
+          <attribute name="title">
+           <string>dasmalwerk</string>
+          </attribute>
+          <widget class="QTableWidget" name="tableWidget_4">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>761</width>
+             <height>211</height>
+            </rect>
+           </property>
+           <row>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>Timestamp</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>URL</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>MD5</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Virustotal</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Yara Match</string>
+            </property>
+           </column>
+           <item row="0" column="0">
+            <property name="text">
+             <string>2018-01-01</string>
+            </property>
+           </item>
+           <item row="0" column="1">
+            <property name="text">
+             <string>http://www.naver.com</string>
+            </property>
+           </item>
+           <item row="0" column="2">
+            <property name="text">
+             <string>7D569C9600C67A457EF4FA8094F16BCD</string>
+            </property>
+           </item>
+           <item row="0" column="3">
+            <property name="text">
+             <string>11/63</string>
+            </property>
+           </item>
+           <item row="0" column="4">
+            <property name="text">
+             <string>aasd asdwqe qweqwe</string>
+            </property>
+           </item>
+          </widget>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Log</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab2">
+      <attribute name="title">
+       <string>Yara Rule Editor</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Yara Rule Editor</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPlainTextEdit" name="plainTextEdit_2"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
