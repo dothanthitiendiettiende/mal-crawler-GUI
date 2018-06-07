@@ -11,7 +11,7 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 name = input("input : ")
 
 def check_http_string(data):
-    if not "http://" in data:
+    if not data.startswith("http://"):
         data = "http://"+data
     return data
 

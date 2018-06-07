@@ -6,9 +6,115 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+from crawler import *
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+import urllib
+import hashlib
+import zipfile
+import sqlite3
+
+# import multiprocessing
+import threading
+
+a = mal_crawler()
+current_path = os.path.dirname(os.path.realpath(__file__))
+
+def check_http_string(data):
+    if not data.startswith("http://"):
+        data = "http://"+data
+    return data
 
 class Ui_Dialog(object):
+
+    def malc0de_download(self):
+        if not os.path.exists("malc0de"):
+            os.makedirs("malc0de")
+            print("Create Dir malc0de")
+
+        malc0de = a.malc0de()
+        for data in malc0de:
+            url = check_http_string(data['url'])
+            
+            try:
+                urllib.request.urlretrieve(url, current_path + "\\malc0de\\" + data['md5'])
+
+            except urllib.error.HTTPError:
+                pass
+
+            except urllib.error.URLError:
+                print("URLError : " + data['url'])
+
+        
+
+    def malc0de_threading(self):
+        t1 = threading.Thread(target=self.malc0de_download)
+        t1.start()
+
+    def malshare_download(self):
+        if not os.path.exists("malshare"):
+            os.makedirs("malshare")
+            print("Create Dir malshare")
+
+        malshare = a.malshare()
+        for data in malshare:
+            url = check_http_string(data['url'])
+            urllib.request.urlretrieve(url, current_path + "\\malshare\\" + data['md5'])
+
+    def malshare_threading(self):
+        t1 = threading.Thread(target=self.malshare_download)
+        t1.start()
+
+    def vxvault_download(self):
+        if not os.path.exists("vxvault"):
+            os.makedirs("vxvault")
+            print("Create Dir vxvault")
+
+        vxvault = a.vxvault()
+        for url in vxvault:
+            url = check_http_string(url)
+            try:
+                urllib.request.urlretrieve(url, current_path + "\\vxvault\\malshare_samples")
+                f = open(current_path + "\\vxvault\\malshare_samples", "rb")
+                data = f.read()
+                f.close()
+
+                os.rename(current_path + "\\vxvault\\malshare_samples", 
+                        current_path + "\\vxvault\\" + hashlib.md5(data).hexdigest())
+            except urllib.error.URLError:
+                print("URLError : " + url)
+                pass
+                
+            except FileExistsError:
+                os.remove(current_path + "\\vxvault\\malshare_samples")
+                print("FileExistsError : " + url)
+
+    def vxvault_threading(self):
+        t1 = threading.Thread(target=self.vxvault_download)
+        t1.start()
+
+    def dasmalwerk_download(self):
+        if not os.path.exists("dasmalwerk"):
+            os.makedirs("dasmalwerk")
+            print("Create Dir dasmalwerk")
+
+        dasmalwerk = a.dasmalwerk()
+        for data in dasmalwerk:
+            urllib.request.urlretrieve(data['url'], 
+                                    current_path + "\\dasmalwerk\\" + data['sha256'] + ".zip")
+            Zip = zipfile.ZipFile(current_path + "\\dasmalwerk\\" + data['sha256'] + ".zip")
+            Zip.setpassword(pwd=b"infected")
+            Zip.extractall(current_path + "\\dasmalwerk\\")
+            Zip.close()
+
+            os.remove(current_path + "\\dasmalwerk\\" + data['sha256'] + ".zip")
+            os.rename(current_path + "\\dasmalwerk\\" + data['filename'], 
+                    current_path + "\\dasmalwerk\\" + data['sha256'])
+    
+    def dasmalwerk_threading(self):
+        t1 = threading.Thread(target=self.dasmalwerk_download)
+        t1.start()
+
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(838, 794)
@@ -273,9 +379,13 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.pushButton_4.setText(_translate("Dialog", "dasmalwerk"))
+        self.pushButton_4.clicked.connect(self.dasmalwerk_threading)
         self.pushButton_3.setText(_translate("Dialog", "vxvault"))
+        self.pushButton_3.clicked.connect(self.vxvault_threading)
         self.pushButton_2.setText(_translate("Dialog", "malshare"))
+        self.pushButton_2.clicked.connect(self.malshare_threading)
         self.pushButton.setText(_translate("Dialog", "malc0de"))
+        self.pushButton.clicked.connect(self.malc0de_threading)
         self.label_2.setText(_translate("Dialog", "Sample Database"))
         item = self.tableWidget.verticalHeaderItem(0)
         item.setText(_translate("Dialog", "1"))
