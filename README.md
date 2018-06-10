@@ -1,6 +1,6 @@
 ### ma-crawler-GUI
 
-<img src="images/1.png" width="50%">
+<img src="images/main.png" width="50%">
 
 GUI 작업 하면 끝.
 
