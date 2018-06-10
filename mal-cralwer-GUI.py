@@ -45,8 +45,6 @@ class Ui_Dialog(object):
             except urllib.error.URLError:
                 print("URLError : " + data['url'])
 
-        
-
     def malc0de_threading(self):
         t1 = threading.Thread(target=self.malc0de_download)
         t1.start()
