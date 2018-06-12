@@ -217,9 +217,13 @@ class Ui_Dialog(object):
             self.t4.start()
 
     def modify_rule(self):
-        f = open("rule.yar","w")
-        f.write(self.plainTextEdit_2.toPlainText())
-        f.close()
+        try:
+            self.rule = yara.compile(source= self.plainTextEdit_2.toPlainText())
+            f = open("rule.yar","w")
+            f.write(self.plainTextEdit_2.toPlainText())
+            f.close()
+        except yara.SyntaxError:
+            print ("syntax error")
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
