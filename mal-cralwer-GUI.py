@@ -57,7 +57,6 @@ class Ui_Dialog(object):
             os.makedirs("malc0de")
             print("Create Dir malc0de")
         malc0de = a.malc0de()
-        print (self.spinBox_3.value())
         for data in malc0de:
 
             if count < self.spinBox_3.value():
@@ -69,11 +68,16 @@ class Ui_Dialog(object):
                     b = f.read()
                     matches = self.rule.match(data=b)
                     match_result = []
-                    for match in matches:
-                        match_result.append(match.strings[0][1])
+
+                    try:
+                        for match in matches:
+                            match_result.append(match.strings[0][1])
+                    except IndexError:
+                        match_result = []
+
                     self.malc0de_data.append([time.strftime("%Y-%m-%d"), url, hashlib.md5(b).hexdigest(), "", ','.join(match_result)])
+                    self.malc0de_setText()
                     f.close()
-                    self.tab_1.update()
                     count += 1
 
                 except urllib.error.HTTPError:
@@ -85,7 +89,6 @@ class Ui_Dialog(object):
             else:
                 break
 
-        print(self.malc0de_data)
 
     def malc0de_threading(self):
         if self.t1.isAlive():
@@ -99,7 +102,6 @@ class Ui_Dialog(object):
             os.makedirs("malshare")
             print("Create Dir malshare")
         malshare = a.malshare()
-        print (self.spinBox.value())
         for data in malshare:
             if count < self.spinBox.value():
                 url = check_http_string(data['url'])
@@ -109,16 +111,20 @@ class Ui_Dialog(object):
                 b = f.read()
                 matches = self.rule.match(data=b)
                 match_result = []
-                for match in matches:
-                    match_result.append(match.strings[0][1])
+
+                try:
+                    for match in matches:
+                        match_result.append(match.strings[0][1])
+                except IndexError:
+                    match_result = []
+
                 self.malshare_data.append([time.strftime("%Y-%m-%d"), url, hashlib.md5(b).hexdigest(), "", ','.join(match_result)])
+                self.malshare_setText()
                 f.close()
-                self.tab_2.update()
                 count += 1
             else:
                 break
 
-        print(self.malshare_data)
 
     def malshare_threading(self):
         if self.t2.isAlive():
@@ -132,23 +138,31 @@ class Ui_Dialog(object):
             os.makedirs("vxvault")
             print("Create Dir vxvault")
         vxvault = a.vxvault()
-        print (self.spinBox_2.value())
         for url in vxvault:
             if count < self.spinBox_2.value():
                 url = check_http_string(url)
                 try:
                     urllib.request.urlretrieve(url, current_path + "\\vxvault\\malshare_samples")
                     f = open(current_path + "\\vxvault\\malshare_samples", "rb")
-                    b = f.read()
-                    matches = self.rule.match(data=b)
-                    match_result = []
-                    for match in matches:
-                        match_result.append(match.strings[0][1])
+                    hash_ = hashlib.md5(f.read()).hexdigest()
                     f.close()
 
                     os.rename(current_path + "\\vxvault\\malshare_samples", 
-                            current_path + "\\vxvault\\" + hashlib.md5(b).hexdigest())
-                    self.vxvault_data.append([time.strftime("%Y-%m-%d"), url, hashlib.md5(b).hexdigest(), "", ','.join(match_reuslt)])
+                            current_path + "\\vxvault\\" + hash_)
+
+                    f = open(current_path + "\\vxvault\\" + hash_, "rb")
+                    matches = self.rule.match(data=f.read())
+                    match_result = []
+                    
+                    try:
+                        for match in matches:
+                            match_result.append(match.strings[0][1])
+                    except IndexError:
+                        match_result = []
+
+                    self.vxvault_data.append([time.strftime("%Y-%m-%d"), url, hash_, "", ','.join(match_result)])
+                    self.vxvault_setText()
+                    f.close()
                     count += 1
 
                 except urllib.error.URLError:
@@ -162,7 +176,6 @@ class Ui_Dialog(object):
             else:
                 break
 
-        print(self.vxvault_data)
 
     def vxvault_threading(self):
         if self.t3.isAlive():
@@ -176,7 +189,6 @@ class Ui_Dialog(object):
             os.makedirs("dasmalwerk")
             print("Create Dir dasmalwerk")
         dasmalwerk = a.dasmalwerk()
-        print (self.spinBox_4.value())
         for data in dasmalwerk:
             if count < self.spinBox_4.value():
                 urllib.request.urlretrieve(data['url'], 
@@ -198,9 +210,15 @@ class Ui_Dialog(object):
                     b = f.read()
                     matches = self.rule.match(data=b)
                     match_result = []
-                    for match in matches:
-                        match_result.append(match.strings[0][1])
+                    
+                    try:
+                        for match in matches:
+                            match_result.append(match.strings[0][1])
+                    except IndexError:
+                        match_result = []
+
                     self.dasmalwerk_data.append([time.strftime("%Y-%m-%d"), data['url'], hash_, "", ','.join(match_result)])
+                    self.dasmalwerk_setText()
                     count += 1
                 except FileExistsError:
                     print ("FIleExistsError")
@@ -208,13 +226,142 @@ class Ui_Dialog(object):
             else:
                 break
         
-        print(self.dasmalwerk_data)
     
     def dasmalwerk_threading(self):
         if self.t4.isAlive():
             print ("This Thread is Alive")
         else:
             self.t4.start()
+
+    def malc0de_setText(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.tableWidget.setRowCount(len(self.malc0de_data))
+
+        for i in range(len(self.malc0de_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget.setVerticalHeaderItem(i, item)
+            item = self.tableWidget.verticalHeaderItem(i)
+            item.setText(_translate("Dialog", str(i+1)))
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget.setItem(i, 0, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget.setItem(i, 1, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget.setItem(i, 2, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget.setItem(i, 3, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget.setItem(i, 4, item)
+
+        for idx, i in enumerate(self.malc0de_data):
+            item = self.tableWidget.item(idx, 0)
+            item.setText(_translate("Dialog", i[0]))
+            item = self.tableWidget.item(idx, 1)
+            item.setText(_translate("Dialog", i[1]))
+            item = self.tableWidget.item(idx, 2)
+            item.setText(_translate("Dialog", i[2]))
+            item = self.tableWidget.item(idx, 3)
+            item.setText(_translate("Dialog", i[3]))
+            item = self.tableWidget.item(idx, 4)
+            item.setText(_translate("Dialog", i[4]))
+
+    def malshare_setText(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.tableWidget_2.setRowCount(len(self.malshare_data))
+
+        for i in range(len(self.malshare_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setVerticalHeaderItem(i, item)
+            item = self.tableWidget_2.verticalHeaderItem(i)
+            item.setText(_translate("Dialog", str(i+1)))
+
+        for i in range(len(self.malshare_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setItem(i, 0, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setItem(i, 1, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setItem(i, 2, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setItem(i, 3, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setItem(i, 4, item)
+
+        for idx, i in enumerate(self.malshare_data):
+            item = self.tableWidget_2.item(idx, 0)
+            item.setText(_translate("Dialog", i[0]))
+            item = self.tableWidget_2.item(idx, 1)
+            item.setText(_translate("Dialog", i[1]))
+            item = self.tableWidget_2.item(idx, 2)
+            item.setText(_translate("Dialog", i[2]))
+            item = self.tableWidget_2.item(idx, 3)
+            item.setText(_translate("Dialog", i[3]))
+            item = self.tableWidget_2.item(idx, 4)
+            item.setText(_translate("Dialog", i[4]))
+
+    def vxvault_setText(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.tableWidget_3.setRowCount(len(self.vxvault_data))
+
+        for i in range(len(self.vxvault_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_3.setVerticalHeaderItem(i, item)
+            item = self.tableWidget_3.verticalHeaderItem(i)
+            item.setText(_translate("Dialog", str(i+1)))
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_3.setItem(i, 0, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_3.setItem(i, 1, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_3.setItem(i, 2, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_3.setItem(i, 3, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_3.setItem(i, 4, item)
+
+        for idx, i in enumerate(self.vxvault_data):
+            item = self.tableWidget_3.item(idx, 0)
+            item.setText(_translate("Dialog", i[0]))
+            item = self.tableWidget_3.item(idx, 1)
+            item.setText(_translate("Dialog", i[1]))
+            item = self.tableWidget_3.item(idx, 2)
+            item.setText(_translate("Dialog", i[2]))
+            item = self.tableWidget_3.item(idx, 3)
+            item.setText(_translate("Dialog", i[3]))
+            item = self.tableWidget_3.item(idx, 4)
+            item.setText(_translate("Dialog", i[4]))
+
+    def dasmalwerk_setText(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.tableWidget_4.setRowCount(len(self.dasmalwerk_data))
+
+        for i in range(len(self.dasmalwerk_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_4.setVerticalHeaderItem(i, item)
+            item = self.tableWidget_4.verticalHeaderItem(i)
+            item.setText(_translate("Dialog", str(i+1)))
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_4.setItem(i, 0, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_4.setItem(i, 1, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_4.setItem(i, 2, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_4.setItem(i, 3, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_4.setItem(i, 4, item)
+
+        for idx, i in enumerate(self.dasmalwerk_data):
+            item = self.tableWidget_4.item(idx, 0)
+            item.setText(_translate("Dialog", i[0]))
+            item = self.tableWidget_4.item(idx, 1)
+            item.setText(_translate("Dialog", i[1]))
+            item = self.tableWidget_4.item(idx, 2)
+            item.setText(_translate("Dialog", i[2]))
+            item = self.tableWidget_4.item(idx, 3)
+            item.setText(_translate("Dialog", i[3]))
+            item = self.tableWidget_4.item(idx, 4)
+            item.setText(_translate("Dialog", i[4]))
 
     def modify_rule(self):
         try:
