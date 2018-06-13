@@ -38,3 +38,22 @@ class mal_crawler():
                               api_key + "&action=getfile&hash=" + hash_['md5'], 
                               "md5": hash_['md5']})
         return data_list
+
+    def urlhaus(self):
+        data_list = []
+        data = requests.get("https://urlhaus.abuse.ch/downloads/csv/").text.split("\r\n")
+        for i in range(9):
+            data.pop(0)
+
+        for i in data:    
+            split_data = i.split(",")
+            try:
+                if split_data[3][1:-1] == "online":
+                    url = i.split(",")[2][1:-1]
+                    list2 = [x for x in url.split("/") if x != ""]
+                    filename = list2[-1]
+                    data_list.append({"url":url, 
+                                    "filename":filename})
+            except:
+                pass
+        return data_list
