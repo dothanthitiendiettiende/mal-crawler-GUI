@@ -12,4 +12,4 @@ Check list
 
 1. Yara Syntax Highlighter
 
-2. This program is have some bug
+2. This program have some bug
