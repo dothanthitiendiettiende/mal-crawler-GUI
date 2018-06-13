@@ -8,3 +8,8 @@ pip install PyQt5
 
 python mal-crawler-GUI.py
 
+Check list
+
+1. Yara Syntax Highlighter
+
+2. This program is have some bug
