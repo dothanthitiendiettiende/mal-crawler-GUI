@@ -84,7 +84,6 @@ elif name == "dasmalwerk":
         os.remove(current_path + "\\dasmalwerk\\" + data['sha256'] + ".zip")
         os.rename(current_path + "\\dasmalwerk\\" + data['filename'], 
                   current_path + "\\dasmalwerk\\" + data['sha256'])
-
         
 
 
