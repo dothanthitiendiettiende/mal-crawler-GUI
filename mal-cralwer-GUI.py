@@ -34,11 +34,13 @@ class Ui_Dialog(object):
         self.t2 = threading.Thread(target=self.malshare_download)
         self.t3 = threading.Thread(target=self.vxvault_download)
         self.t4 = threading.Thread(target=self.dasmalwerk_download)
+        self.t5 = threading.Thread(target=self.urlhaus_download)
 
         self.malc0de_data = []
         self.malshare_data = []
         self.vxvault_data = []
         self.dasmalwerk_data = []
+        self.urlhaus_data = []
 
         try:
             self.rule = yara.compile(source= open("rule.yar","r").read())
@@ -233,6 +235,57 @@ class Ui_Dialog(object):
         else:
             self.t4.start()
 
+    def urlhaus_download(self):
+        count = 0
+        if not os.path.exists("urlhaus"):
+            os.makedirs("urlhaus")
+            print("Create Dir urlhaus")
+
+        urlhaus = a.urlhaus()
+        for data in urlhaus:
+            if count < self.spinBox_5.value():
+                url = check_http_string(data['url'])
+                try:
+                    urllib.request.urlretrieve(url, current_path + "\\urlhaus\\malshare_samples")
+                    f = open(current_path + "\\urlhaus\\malshare_samples", "rb")
+                    hash_ = hashlib.md5(f.read()).hexdigest()
+                    f.close()
+
+                    os.rename(current_path + "\\urlhaus\\malshare_samples", 
+                            current_path + "\\urlhaus\\" + hash_)
+
+                    f = open(current_path + "\\urlhaus\\" + hash_, "rb")
+                    matches = self.rule.match(data=f.read())
+                    match_result = []
+                    
+                    try:
+                        for match in matches:
+                            match_result.append(match.strings[0][1])
+                    except IndexError:
+                        match_result = []
+
+                    self.urlhaus_data.append([time.strftime("%Y-%m-%d"), url, hash_, "", ','.join(match_result)])
+                    self.urlhaus_setText()
+                    f.close()
+                    count += 1
+
+                except urllib.error.URLError:
+                    print("URLError : " + url)
+                    pass
+                        
+                except FileExistsError:
+                    os.remove(current_path + "\\vxvault\\malshare_samples")
+                    print("FileExistsError : " + url)
+
+            else:
+                break
+
+    def urlhaus_threading(self):
+        if self.t5.isAlive():
+            print ("This Thread is Alive")
+        else:
+            self.t5.start()
+
     def malc0de_setText(self):
         _translate = QtCore.QCoreApplication.translate
         self.tableWidget.setRowCount(len(self.malc0de_data))
@@ -363,6 +416,38 @@ class Ui_Dialog(object):
             item = self.tableWidget_4.item(idx, 4)
             item.setText(_translate("Dialog", i[4]))
 
+    def urlhaus_setText(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.tableWidget_5.setRowCount(len(self.urlhaus_data))
+
+        for i in range(len(self.urlhaus_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setVerticalHeaderItem(i, item)
+            item = self.tableWidget_5.verticalHeaderItem(i)
+            item.setText(_translate("Dialog", str(i+1)))
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 0, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 1, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 2, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 3, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 4, item)
+
+        for idx, i in enumerate(self.urlhaus_data):
+            item = self.tableWidget_5.item(idx, 0)
+            item.setText(_translate("Dialog", i[0]))
+            item = self.tableWidget_5.item(idx, 1)
+            item.setText(_translate("Dialog", i[1]))
+            item = self.tableWidget_5.item(idx, 2)
+            item.setText(_translate("Dialog", i[2]))
+            item = self.tableWidget_5.item(idx, 3)
+            item.setText(_translate("Dialog", i[3]))
+            item = self.tableWidget_5.item(idx, 4)
+            item.setText(_translate("Dialog", i[4]))
+
     def modify_rule(self):
         try:
             self.rule = yara.compile(source= self.plainTextEdit_2.toPlainText())
@@ -464,6 +549,12 @@ class Ui_Dialog(object):
         self.spinBox_3.setMouseTracking(False)
         self.spinBox_3.setObjectName("spinBox_3")
         self.gridLayout.addWidget(self.spinBox_3, 3, 0, 1, 1)
+        self.pushButton_6 = QtWidgets.QPushButton(self.tab1)
+        self.pushButton_6.setObjectName("pushButton_6")
+        self.gridLayout.addWidget(self.pushButton_6, 0, 4, 1, 1)
+        self.spinBox_5 = QtWidgets.QSpinBox(self.tab1)
+        self.spinBox_5.setObjectName("spinBox_5")
+        self.gridLayout.addWidget(self.spinBox_5, 3, 4, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
         self.label_2 = QtWidgets.QLabel(self.tab1)
         font = QtGui.QFont()
@@ -620,6 +711,42 @@ class Ui_Dialog(object):
             self.tableWidget_4.setItem(i, 4, item)
 
         self.tabWidget.addTab(self.tab_4, "")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.tableWidget_5 = QtWidgets.QTableWidget(self.tab)
+        self.tableWidget_5.setGeometry(QtCore.QRect(10, 10, 761, 211))
+        self.tableWidget_5.setObjectName("tableWidget_5")
+        self.tableWidget_5.setColumnCount(5)
+        self.tableWidget_5.setRowCount(len(self.urlhaus_data))
+        
+        for i in range(len(self.urlhaus_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setVerticalHeaderItem(i, item)
+
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(4, item)
+
+        for i in range(len(self.urlhaus_data)):
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 0, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 1, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 2, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 3, item)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_5.setItem(i, 4, item)
+
+        self.tabWidget.addTab(self.tab, "")
         self.verticalLayout_2.addWidget(self.tabWidget)
         self.label = QtWidgets.QLabel(self.tab1)
         font = QtGui.QFont()
@@ -679,6 +806,8 @@ class Ui_Dialog(object):
         self.pushButton_2.clicked.connect(self.malshare_threading)
         self.pushButton.setText(_translate("Dialog", "malc0de"))
         self.pushButton.clicked.connect(self.malc0de_threading)
+        self.pushButton_6.setText(_translate("Dialog", "urlhaus"))
+        self.pushButton_6.clicked.connect(self.urlhaus_threading)
         self.label_2.setText(_translate("Dialog", "Sample Database"))
 
         for i in range(len(self.malc0de_data)):
@@ -808,6 +937,38 @@ class Ui_Dialog(object):
 
         self.tableWidget_4.setSortingEnabled(__sortingEnabled)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("Dialog", "dasmalwerk"))
+
+        for i in range(len(self.urlhaus_data)):
+            item = self.tableWidget_5.verticalHeaderItem(i)
+            item.setText(_translate("Dialog", str(i+1)))
+
+        item = self.tableWidget_5.horizontalHeaderItem(0)
+        item.setText(_translate("Dialog", "Timestamp"))
+        item = self.tableWidget_5.horizontalHeaderItem(1)
+        item.setText(_translate("Dialog", "URL"))
+        item = self.tableWidget_5.horizontalHeaderItem(2)
+        item.setText(_translate("Dialog", "MD5"))
+        item = self.tableWidget_5.horizontalHeaderItem(3)
+        item.setText(_translate("Dialog", "Virustotal"))
+        item = self.tableWidget_5.horizontalHeaderItem(4)
+        item.setText(_translate("Dialog", "Yara Match"))
+        __sortingEnabled = self.tableWidget_5.isSortingEnabled()
+        self.tableWidget_5.setSortingEnabled(False)
+
+        for idx, i in enumerate(self.urlhaus_data):
+            item = self.tableWidget_5.item(idx, 0)
+            item.setText(_translate("Dialog", i[0]))
+            item = self.tableWidget_5.item(idx, 1)
+            item.setText(_translate("Dialog", i[1]))
+            item = self.tableWidget_5.item(idx, 2)
+            item.setText(_translate("Dialog", i[2]))
+            item = self.tableWidget_5.item(idx, 3)
+            item.setText(_translate("Dialog", i[3]))
+            item = self.tableWidget_5.item(idx, 4)
+            item.setText(_translate("Dialog", i[4]))
+
+        self.tableWidget_5.setSortingEnabled(__sortingEnabled)
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "urlhaus"))
         self.label.setText(_translate("Dialog", "Log"))
         self.TabWidget1.setTabText(self.TabWidget1.indexOf(self.tab1), _translate("Dialog", "Mal-Crawler"))
         self.label_3.setText(_translate("Dialog", "Yara Rule Editor"))
