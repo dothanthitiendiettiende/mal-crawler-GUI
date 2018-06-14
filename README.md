@@ -1,4 +1,4 @@
-### ma-crawler-GUI
+### mal-crawler-GUI
 
 <img src="images/main.png" width="50%">
 <img src="images/editor.png" width="50%">
