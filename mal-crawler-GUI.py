@@ -8,6 +8,9 @@
 
 from crawler import *
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QRegExp, Qt
+from PyQt5.QtGui import QColor, QTextCharFormat, QFont, QSyntaxHighlighter
+
 import os
 import urllib
 import hashlib
@@ -27,6 +30,61 @@ def check_http_string(data):
     if not data.startswith("http://"):
         data = "http://"+data
     return data
+
+class YaraHighlighter(QSyntaxHighlighter):
+    def __init__(self, document):
+        QSyntaxHighlighter.__init__(self, document)
+
+        quote_color = QTextCharFormat()
+        color_ = QColor()
+        color_.setRgb(255, 127, 80)
+        quote_color.setForeground(color_)
+
+        keyword_color = QTextCharFormat()
+        color_ = QColor()
+        color_.setRgb(102, 0, 153)
+        keyword_color.setForeground(color_)
+
+        hex_color = QTextCharFormat()
+        color_ = QColor()
+        color_.setRgb(0, 153, 0)
+        hex_color.setForeground(color_)
+
+        comment_color = QTextCharFormat()
+        color_ = QColor()
+        color_.setRgb(187, 93, 0)
+        comment_color.setForeground(color_)
+
+        keywords = [
+            "\\ball\\b", "\\band\\b", "\\bany\\b", "\\bascii\\b", "\\bat\\b", "\\bcondition\\b", "\\bcontains\\b",
+            "\\bentrypoint\\b", "\\bfalse\\b", "\\bfilesize\\b", "\\bfullword\\b", "\\bfor\\b", "\\bglobal\\b", "\\bin\\b",
+            "\\bimport\\b", "\\binclude\\b", "\\bint8\\b", "\\bint16\\b", "\\bint32\\b", "\\bint8be\\b", "\\bint16be\\b",
+            "\\bint32be\\b", "\\bmatches\\b", "\\bmeta\\b", "\\bnocase\\b", "\\bnot\\b", "\\bor\\b", "\\bof\\b",
+            "\\bprivate\\b", "\\brule\\b", "\\bstrings\\b", "\\bthem\\b", "\\btrue\\b", "\\buint8\\b", "\\buint16\\b",
+            "\\buint32\\b", "\\buint8be\\b", "\\buint16be\\b", "\\buint32be\\b", "\\bwide\\b"
+        ]
+
+        self.highlightingRules = [(QRegExp(keyword), keyword_color) # keyword
+                for keyword in keywords]
+
+        self.highlightingRules.append((QRegExp("\{[\S\s]*\}"), hex_color)) # hex string
+        self.highlightingRules.append((QRegExp("\/.*\/"), quote_color)) # regex
+        self.highlightingRules.append((QRegExp("\/\*[\S\s]*\*\/"), comment_color)) # comment
+        self.highlightingRules.append((QRegExp("\/\/.*"), comment_color)) # comment
+        self.highlightingRules.append((QRegExp("\".*\""), quote_color)) # double quote
+        self.highlightingRules.append((QRegExp("\'.*\'"), quote_color)) # single quote
+
+    def highlightBlock(self, text):
+        for pattern, format in self.highlightingRules:
+            expression = QRegExp(pattern)
+            index = expression.indexIn(text)
+
+            while index >= 0:
+                length = expression.matchedLength()
+                self.setFormat(index, length, format)
+                index = expression.indexIn(text, index + length)
+
+        self.setCurrentBlockState(0)
 
 class Ui_Dialog(object):
     def __init__(self):
@@ -773,6 +831,9 @@ class Ui_Dialog(object):
 
         self.plainTextEdit_2 = QtWidgets.QPlainTextEdit(self.tab2)
         self.plainTextEdit_2.setObjectName("plainTextEdit_2")
+        self.plainTextEdit_2.setStyleSheet("""QPlainTextEdit{
+                                            font-family:'Consolas';}""")
+        self.highlighter = YaraHighlighter(self.plainTextEdit_2.document())
         
         try:
             f = open("rule.yar","r")
